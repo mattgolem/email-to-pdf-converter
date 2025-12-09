@@ -247,8 +247,13 @@ public class MainWindow {
 
         final JCheckBox chckbxExtractAttachments = new JCheckBox("Extract Attachments");
         chckbxExtractAttachments.setBackground(Color.WHITE);
-        chckbxExtractAttachments.setBounds(10, 69, 180, 23);
+        chckbxExtractAttachments.setBounds(10, 69, 150, 23);
         panel.add(chckbxExtractAttachments);
+
+        final JCheckBox chckbxAddAttachmentNames = new JCheckBox("Add Attachment Names");
+        chckbxAddAttachmentNames.setBackground(Color.WHITE);
+        chckbxAddAttachmentNames.setBounds(160, 69, 180, 23);
+        panel.add(chckbxAddAttachmentNames);
 
         JPanel panelProgress = new JPanel();
         panelProgress.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -280,7 +285,7 @@ public class MainWindow {
                     @Override
                     public void run() {
                         startConversion(
-                                Collections.list(listModel.elements()), chckbxAddEmailHeaders.isSelected(), proxy, chckbxExtractAttachments.isSelected());
+                                Collections.list(listModel.elements()), chckbxAddEmailHeaders.isSelected(), proxy, chckbxAddAttachmentNames.isSelected(), chckbxExtractAttachments.isSelected());
                     }
                 }).start();
             }
@@ -337,7 +342,7 @@ public class MainWindow {
     /**
      * Start converting the email files.
      */
-    private void startConversion(List<String> l, boolean showHeaders, String proxy, boolean extractAttachments) {
+    private void startConversion(List<String> l, boolean showHeaders, String proxy, boolean addAttachmentNames, boolean extractAttachments) {
         try {
             ArrayList<String> argsOptions = new ArrayList<String>();
 
@@ -348,6 +353,10 @@ public class MainWindow {
             if (!Strings.isNullOrEmpty(proxy)) {
                 argsOptions.add("--proxy");
                 argsOptions.add(proxy);
+            }
+
+            if (addAttachmentNames) {
+                argsOptions.add("--add-attachment-names");
             }
 
             if (extractAttachments) {
